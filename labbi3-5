@@ -1,0 +1,165 @@
+//Лаба3
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	setlocale(LC_ALL, "RU");
+	
+	short i;
+	int n;
+	cout << "Введите число и бит который хотите вывести:";
+	cin >> n >> i;
+	i = (n >> i) & 1;
+	cout << i;
+
+	return 0;
+}
+/*
+int x, i;
+cout << "Введите число и бит:";
+cin >> x >> i;
+i = 1 << i;
+cout << (x | i);
+*/
+
+//Лаба4
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+void print(const string& word) {
+	cout << word << endl;
+}
+void print(int word) {
+	cout << word << endl;
+}
+
+int main() {
+	setlocale(LC_ALL, "RU");
+	//Вариант 3
+	//Задача 1
+	
+	int a, b, c;
+
+	cout << "Введи a,b,c : ";
+
+	cin >> a >> b >> c;
+
+	if (((a > b) && (b > c)))
+	{
+		cout << a - b - c;
+	}
+	else if (((b > a) && (b % c == 0)))
+	{
+		cout << (b / c) + b - a;
+	}
+	else
+	{
+		cout << a + b + c;
+	}
+
+	//Задача 2
+
+	
+	int n;
+	cout << "Введи n : ";
+	cin >> n;
+	switch (n) {
+	case 1: print("Цифра один"); break;
+	case 5: print("Цифра пять"); break;
+	case 10: print("Цифра десять"); break;
+	default: print("Ошибочный ввод n"); break;
+	}
+	
+
+	//Задача 3
+
+	
+	short x;
+	cout << "Введи n : ";
+	cin >> x;
+	switch (x) {
+	case -1: print("Negative number"); break;
+	case 1: print("Positive number"); break;
+	}
+	
+
+	return 0;
+}
+
+//Лаба5
+
+#include <iostream>
+#include <string>
+#include <list>
+
+using namespace std;
+
+void print(string word) {
+	cout << word << endl;
+}
+void print(int word) {
+	cout << word << endl;
+}
+
+int main() {
+	setlocale(LC_ALL, "RU");
+	
+	int posl[23] = {-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+	int aJ[10] = {-5,-1,2,3,5,7,9,19,90,1010};
+	int rez = 1;
+	int index;
+
+	list<int> sovpadaushie1;
+	int mins = 1000000;
+
+	for (int i = 0; i < N; i++)
+		if (-2 <= posl[i] && posl[i] <= 20)
+		{
+			rez = rez * posl[i];
+			if (posl[i] < mins) {
+				mins = posl[i];
+			}
+		}
+
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			if (aJ[i] == posl[j]) {
+				rez = rez * aJ[i];
+				if (aJ[i] < mins) {
+					mins = aJ[i];
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < 10; i++) {
+		if (aJ[i] == mins)
+			index = i;
+	}
+	
+	print("Результат умножения: ");
+	print(rez);
+	print("Минимальный элемент :");
+	print(mins);
+	print("Индекс минимального: ");
+	print(index);
+	/*
+	int N, d, sum_chet = 0;
+	print("Введи N уже)");
+	cin >> N;
+	
+	while (N > 0) {
+		d = N % 10;
+		if (d % 2 == 0)
+			sum_chet += d;
+		N /= 10;
+	}
+	
+	print(sum_chet);
+	*/
+
+	return 0;
+}
