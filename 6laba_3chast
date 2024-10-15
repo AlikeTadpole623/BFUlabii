@@ -1,0 +1,66 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void print(string word) {
+	cout << word << endl;
+}
+void print(int word) {
+	cout << word << endl;
+}
+void print_matrix(int m,int n,int** matrix) {
+	for (int i = 0; i < m; i++) {
+		cout << endl;
+		for (int j = 0; j < n; j++) {
+			print(matrix[i][j]);
+
+		}
+	}
+}
+
+int main() {
+	setlocale(LC_ALL, "RU");
+
+	int m, n, element_min = INT_MAX, str = -1, a;
+	cout << "Количество строк:";
+	cin >> m;
+	cout << "Количество столбцов:";
+	cin >> n;
+	int** matrix = new int* [m];
+	for (int i = 0; i < m; i++) {
+		matrix[i] = new int[n];
+	}
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << "Введите элемент " << i + 1 << " строки " << j + 1 << " столбца:";
+			cin >> matrix[i][j];
+
+			if (matrix[i][j] < element_min) {
+				element_min = matrix[i][j];
+				str = j;
+			}
+		}
+	}
+	for (int i = 0; i < m; i++) {
+		if (matrix[i][str] < 0) {
+			matrix[i][str] = 0;
+		}
+	}
+
+	cout << "Минимальный элемент:" << element_min << endl;
+	cout << "Матрица:";
+
+	for (int i = 0; i < m; i++) {
+		cout << endl;
+		for (int j = 0; j < n; j++) {
+			cout << matrix[i][j] << " ";
+
+		}
+	}
+
+	print_matrix(m, n, matrix);
+
+
+	return 0;
+}
