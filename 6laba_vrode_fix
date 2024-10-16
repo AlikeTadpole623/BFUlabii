@@ -1,0 +1,102 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void print(const string& word) {
+	cout << word << endl;
+}
+void print(int word) {
+	cout << word << endl;
+}
+
+int chet_Zifr(int chislo) {
+	int shetchik = 0;
+	while (chislo > 0) {
+		chislo /= 10;
+		shetchik += 1;
+	}
+	return(shetchik);
+}
+
+int pervaia_zifra(int chislo) {
+	string copipast_chislo_in_str = to_string(chislo);
+	return (int(copipast_chislo_in_str[0]));
+}
+
+int max_zifra(int chislo) {
+	string copipast_chislo_in_str = to_string(chislo);
+	int max_s = int(copipast_chislo_in_str[0]);
+	for (int i = 0; i < chet_Zifr(chislo); i++) {
+		if (int(copipast_chislo_in_str[i]) > max_s) {
+			max_s = int(copipast_chislo_in_str[i]);
+		}
+	}
+	return max_s;
+}
+
+bool comporator_po_one_ZiFrE(int one_z,int two_z) {
+
+	/*
+	if ((pervaia_zifra(one_z) < pervaia_zifra(two_z)) ||
+		(pervaia_zifra(one_z) == pervaia_zifra(two_z) && max_zifra(one_z) < max_zifra(two_z)) ||
+		(pervaia_zifra(one_z) == pervaia_zifra(two_z) && max_zifra(one_z) == max_zifra(two_z) && one_z < two_z))
+			return true;
+	return false;
+	*/
+
+	if (pervaia_zifra(one_z) > pervaia_zifra(two_z)) {
+		return true;
+	}
+	else if (pervaia_zifra(one_z) == pervaia_zifra(two_z)) {
+		if (max_zifra(one_z) > max_zifra(two_z)) {
+			return true;
+		}
+		else if (max_zifra(one_z) == max_zifra(two_z)) {
+			if (one_z > two_z) {
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+	else {
+		return false;
+	}
+}
+
+int main() {
+	setlocale(LC_ALL, "RU");
+
+	size_t size;
+	print("Введи размер массива: ");
+	cin >> size;
+
+	int* array = new int[size];
+
+	cout << endl;
+	cout << "Пожалуйста введите - " << size << " значение/ий/ия" << endl;
+
+	for (size_t i = 0; i < size; i++) {
+		cin >> array[i];
+	}
+	cout << endl;
+
+	for (int i = 0; i < size - 1; i++) {
+		for (int j = i + 1; j < size; j++) {
+			if (comporator_po_one_ZiFrE(array[i], array[j])) {
+				swap(array[i], array[j]);
+			}
+		}
+	}
+
+	print("Массив после: ");
+	cout << endl;
+
+	for (int i = 0; i < size; i++) {
+		print(array[i]);
+	}
+
+	delete[] array;
+	return 0;
+}
