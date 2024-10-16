@@ -1,0 +1,113 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void print(const string& word) {
+	cout << word << endl;
+}
+void print(int word) {
+	cout << word << endl;
+}
+
+bool chislo_5(int massiv_index) {
+	bool flag = false;
+	string massiv_index_str = to_string(massiv_index);
+	int colvo_5 = 0;
+	for (int i = 0; i < massiv_index_str.length(); i++) {
+		if (massiv_index_str[i] == '5') {
+			colvo_5++;
+		}
+	}
+	if (colvo_5 >= 1) {
+		flag = true;
+	}
+
+	if (flag == true) {
+		return true;
+	}
+	return false;
+}
+
+bool para_cifr(int massiv_index) {
+	bool flag = false;
+	string number = to_string(massiv_index);
+	
+	for (int i = 0; i < number.length(); i++)
+		for (int j = i + 1; j < number.length(); j++)
+			if (number[i] == number[j])
+				return true;
+	return false;
+}
+
+
+
+
+
+
+int main() {
+	setlocale(LC_ALL, "RU");
+
+	size_t size;
+
+	print("Введи размер массива: ");
+	cin >> size;
+
+	int* array = new int[size];
+
+	cout << endl;
+	cout << "Пожалуйста введите - " << size << " значение/ий/ия" << endl;
+
+	for (size_t i = 0; i < size; i++) {
+		cin >> array[i];
+	}
+
+	cout << endl;
+
+	print("Массив до: ");
+	for (int i = 0; i < size; i++) {
+		print(array[i]);
+	}
+	cout << endl;
+
+	for (int i = 0; i < size; i++) {
+		if (!para_cifr(array[i])) {
+			continue;
+		}
+		
+		for(int j = i;j < size - 1;j++)
+			array[j] = array[j+1];
+		size--;
+		i--;
+	}
+	/*
+	print("Массив после: ");
+	cout << endl;
+
+	for (int i = 0; i < size; i++) {
+		print(array[i]);
+	}
+	*/
+
+
+	
+	for (int i = 0; i < size; i++) {
+		if (chislo_5(array[i])) {
+			for (int g = size; g > i; g--) {
+				array[g] = array[g - 1];
+			}
+			i++;
+			size++;
+		}
+	}
+	
+
+	print("Массив после: ");
+	cout << endl;
+
+	for (int i = 0; i < size; i++) {
+		print(array[i]);
+	}
+
+	return 0;
+}
