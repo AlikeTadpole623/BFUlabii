@@ -1,0 +1,101 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <cctype>
+#include <algorithm>
+#include <sstream>
+
+bool cmp(const std::pair<char, int>& a, const std::pair<char, int>& b)
+{
+    return a.second > b.second;
+}
+
+std::map<char, int> countLetterFrequency(const std::string& text) {
+    std::map<char, int> frequency;
+    for (char c : text) {
+        if (std::isalpha(c)) {
+            c = std::tolower(c);  // Приводим к нижнему регистру
+            frequency[c]++;
+        }
+    }
+    return frequency;
+}
+
+std::vector<char> getTop10Letters(const std::map<char, int>& frequency) {
+    std::vector<std::pair<char, int>> freqVector(frequency.begin(), frequency.end());
+    std::sort(freqVector.begin(), freqVector.end(), cmp);
+
+    std::vector<char> topLetters;
+    for (size_t i = 0; i < 10 && i < freqVector.size(); ++i) {
+        topLetters.push_back(freqVector[i].first);
+    }
+    return topLetters;
+}
+
+std::string processText(const std::string& text, const std::vector<char>& topLetters) {
+    std::string result;
+    std::istringstream stream(text);
+    std::string word;
+
+    while (stream >> word) {
+        int letterCount = 0;
+        char foundLetter = '\0';
+
+        // Считаем количество встречающихся часто букв
+        for (char c : word) {
+            char lowerC = std::tolower(c);
+            if (std::find(topLetters.begin(), topLetters.end(), lowerC) != topLetters.end()) {
+                letterCount++;
+                foundLetter = lowerC; // Сохраняем букву
+            }
+        }
+
+        // Если ровно одна из часто встречающихся букв
+        if (letterCount == 1) {
+            for (char& c : word) {
+                c = std::toupper(c); // Делаем слово заглавным
+            }
+            result += word + " (" + static_cast<char>(std::toupper(foundLetter)) + ") "; // Добавляем букву в скобках
+        }
+        else {
+            result += word + " "; // Остальные слова остаются без изменений
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    setlocale(LC_ALL,"RU");
+    std::ifstream inputFile("input(8_3).txt");
+    if (!inputFile) {
+        std::cerr << "Ошибка открытия файла input.txt" << std::endl;
+        return 1;
+    }
+
+    std::string text((std::istreambuf_iterator<char>(inputFile)),
+        std::istreambuf_iterator<char>());
+    inputFile.close();
+
+    // Шаг 1: Подсчет частоты букв
+    auto frequency = countLetterFrequency(text);
+
+    // Шаг 2: Получение 10 самых частых букв
+    auto topLetters = getTop10Letters(frequency);
+
+    // Шаг 3: Обработка текста
+    std::string processedText = processText(text, topLetters);
+
+    // Шаг 4: Запись в файл output.txt
+    std::ofstream outputFile("output.txt");
+    if (!outputFile) {
+        std::cerr << "Ошибка открытия файла output.txt" << std::endl;
+        return 1;
+    }
+    outputFile << processedText;
+    outputFile.close();
+
+    return 0;
+}
