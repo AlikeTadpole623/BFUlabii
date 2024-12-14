@@ -1,0 +1,15 @@
+#include <iostream>
+
+int main() {
+	setlocale(LC_ALL, "RU");
+	short chislo = 1000;
+
+	std::cout << &chislo << std::endl; //Взятие адресса
+
+	short* chislo_adress = &chislo;
+	std::cout << "Первая ячейка = " << *chislo_adress << std::endl;
+	std::cout << "Вторая ячейка = " << *(chislo_adress + 1) << std::endl;
+	std::cout << "Третья ячейка = " << *(chislo_adress + 2) << std::endl;
+	std::cout << "Четвертая ячейка = " << *(chislo_adress + 3) << std::endl;
+	return 0;
+}
