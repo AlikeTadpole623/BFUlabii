@@ -1,0 +1,129 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void print(const string& word) {
+	cout << word << endl;
+}
+void print(int word) {
+	cout << word << endl;
+}
+void del_array(int** matrix, int m) {
+	for (int i = 0; i < m; i++) delete[] matrix[i];
+	delete[] matrix;
+}
+
+bool cifri_5_or_3(int massiv_index) {
+	bool flag = false;
+	string massiv_index_str = to_string(massiv_index);
+	short colvo_5_or_3 = 0;
+	for (int i = 0; i < massiv_index_str.length(); i++) {
+		if ((massiv_index_str[i] == '5') || (massiv_index_str[i] == '3')) {
+			colvo_5_or_3++;
+		}
+	}
+	if (colvo_5_or_3 >= 1) {
+		flag = true;
+	}
+
+	if (flag == true) {
+		return true;
+	}
+	return false;
+}
+int mins_stolb_el(int** matrix, int m, int j) {
+	int element_min_stolb = INT_MAX;
+
+	for (int i = 0; i < m; i++) {
+		if (matrix[i][j] < element_min_stolb) {
+			element_min_stolb = matrix[i][j];
+		}
+	}
+
+	return element_min_stolb;
+}
+int sumsOfCvadrat(int** matrix, int m, int j) {
+	long summa = 0;
+	for (int i = 0; i < m; i++) {
+		summa += ((matrix[i][j] * matrix[i][j]));
+	}
+
+	return summa;
+}
+
+int main() {
+	setlocale(LC_ALL, "RU");
+
+	//Ввод матрицы
+	int m, element_min = INT_MAX;
+	cout << "Количество строк и столбцов:";
+	cin >> m;
+	int** matrix = new int* [m];
+
+	for (int i = 0; i < m; i++) {
+		matrix[i] = new int[m];
+	}
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < m; j++) {
+			cout << "Введите элемент " << i + 1 << " строки " << j + 1 << " столбца:";
+			cin >> matrix[i][j];
+		}
+	}
+	//Ввод матрицы закончен
+
+	//Вывод её на экран
+	cout << "Матрица:";
+
+	for (int i = 0; i < m; i++) {
+		cout << endl;
+		for (int j = 0; j < m; j++) {
+			cout << matrix[i][j] << " ";
+
+		}
+	}
+	//Вывод окончен
+
+	//Проверяем все ли m диагональные элементы соответствуют условию это решает СигМА
+	int sigma = 0;
+	int flag_all_diagonal_element_more_0 = false;
+	for (int i = 0; i < m; i++) {
+		if ((matrix[i][i] > 0) && (cifri_5_or_3(matrix[i][i]))) {
+			sigma++;
+		}
+	}
+	if (sigma == m) {
+		flag_all_diagonal_element_more_0 = true;
+	}
+
+	//Меняем минимальные элементы столбцов по условию (3 или 5) и >0
+	if (flag_all_diagonal_element_more_0){
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < m; j++) {
+				if ((matrix[i][j] == mins_stolb_el(matrix, m, j))) {
+					matrix[i][j] = sumsOfCvadrat(matrix, m, j);
+					j = m;
+					continue;
+				}
+			}
+		}
+	}
+	//Вывод матрицы после редактирования исходя из условия
+	cout << endl;
+	cout << endl;
+	cout << "Матрица после:";
+	cout << endl;
+	for (int i = 0; i < m; i++) {
+		cout << endl;
+		for (int j = 0; j < m; j++) {
+			cout << matrix[i][j] << " ";
+
+		}
+	}
+	//Вывод матрицы после редактирования исходя из условия ЗАВЕРШЕН
+
+	//Очистка оперативной памяти, путем удаления динамического массива
+	del_array(matrix, m);
+
+	return 0;
+}
