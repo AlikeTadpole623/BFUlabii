@@ -1,0 +1,66 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+
+bool hasThreeOrMoreVowels(const std::string& word) {
+    int vowelCount = 0;
+    for (char c : word) {
+        if (std::string("aeiouAEIOU").find(c) != std::string::npos) {
+            vowelCount++;
+        }
+        if (vowelCount >= 3) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::string processWord(const std::string& word) {
+    std::string result;
+    for (char c : word) {
+        if (std::string("aeiouAEIOU").find(c) == std::string::npos) {
+            result += c; // сохраняем согласные
+            result += c; // дублируем согласные
+        }
+    }
+    return result;
+}
+
+int main() {
+    setlocale(LC_ALL, "RU");
+    std::string text;
+    std::cout << "Введите текст: ";
+    std::getline(std::cin, text);
+
+    // Проверка на размер текста в 10 КБ
+    if (text.size() > 10240) {
+        std::cerr << "Ошибка: размер текста не должен превышать 10 КБ." << std::endl;
+        return 1; // Завершить выполнение программы с ошибкой
+    }
+
+    std::vector<std::string> words;
+    std::istringstream stream(text);
+    std::string word;
+
+    while (stream >> word) {
+        if (hasThreeOrMoreVowels(word)) {
+            words.push_back(word);
+        }
+        else {
+            words.push_back(processWord(word));
+        }
+    }
+
+    // Сортируем слова в обратном алфавитном порядке
+    std::sort(words.begin(), words.end(), std::greater<std::string>());
+
+    // Выводим слова
+    for (const std::string& w : words) {
+        std::cout << w << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
