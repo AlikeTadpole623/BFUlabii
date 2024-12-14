@@ -1,0 +1,136 @@
+//Единственная фаталити data/100
+#include <iostream>
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+namespace mt {
+    void Push_back(Node* head, int value) {
+        Node* p = head;
+        while (p->next != nullptr)
+            p = p->next;
+
+        Node* q = new Node;
+        q->data = value;
+        q->next = nullptr;
+        p->next = q;
+    }
+
+    void Print(Node* head) {
+        Node* p = head->next;
+        while (p != nullptr) {
+            std::cout << p->data << " ";
+            p = p->next;
+        }
+        std::cout << std::endl;
+    }
+
+    int GetDigitsCount(int number) {
+        int count = 0;
+        while (number > 0) {
+            count++;
+            number /= 10;
+        }
+        return count;
+    }
+
+    bool IsThreeDigitEven(int number) {
+        if (GetDigitsCount(number) != 3) return false;
+        while (number > 0) {
+            if ((number % 10) % 2 != 0) return false;
+            number /= 10;
+        }
+        return true;
+    }
+
+    void SortByFirstDigit(Node* head) {
+        // Сортировка методом выборки
+        for (Node* i = head->next; i != nullptr; i = i->next) {
+            for (Node* j = head->next; j->next != nullptr; j = j->next) {
+                if (j->data / 100 > j->next->data / 100) {
+                    std::swap(j->data, j->next->data);
+                }
+            }
+        }
+    }
+
+    void DuplicateAndRemoveEven(Node* head) {
+        Node* current = head->next;
+        Node* prev = head;
+
+        while (current != nullptr) {
+            int digitsCount = GetDigitsCount(current->data);
+            if (digitsCount % 2 == 0) {
+                // Удаляем текущий элемент
+                Node* tmp = current;
+                prev->next = current->next;
+                current = current->next;
+                delete tmp;
+            }
+            else {
+                // Дублируем элемент
+                Node* newNode = new Node{ current->data, current->next };
+                current->next = newNode; // Связываем новый элемент с текущим
+                prev = newNode; // Обновляем prev к новому узлу
+                current = newNode->next; // Переходим к следующему элементу
+            }
+        }
+    }
+
+    void Clear(Node* head) {
+        Node* p = head;
+        while (p != nullptr) {
+            Node* tmp = p;
+            p = p->next;
+            delete tmp;
+        }
+    }
+
+    void Make(Node*& head) {
+        head = new Node{ 0, nullptr }; // Создаем "голову" списка
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "RU");
+
+    Node* head;
+    mt::Make(head);
+
+    // Считывание чисел
+    std::cout << "Введите последовательность натуральных чисел (0 для завершения):\n";
+    int number;
+    while (true) {
+        std::cin >> number;
+        if (number == 0) break;  // Завершение ввода
+        mt::Push_back(head, number);
+    }
+
+    // Проверка на наличие трехзначных четных чисел
+    Node* p = head->next;
+    bool hasThreeDigitEven = false;
+
+    while (p != nullptr) {
+        if (mt::IsThreeDigitEven(p->data)) {
+            hasThreeDigitEven = true;
+            break;
+        }
+        p = p->next;
+    }
+
+    if (hasThreeDigitEven) {
+        mt::SortByFirstDigit(head);
+    }
+    else {
+        mt::DuplicateAndRemoveEven(head);
+    }
+
+    // Вывод результата
+    std::cout << "Итоговая последовательность:\n";
+    mt::Print(head);
+
+    mt::Clear(head);
+    return 0;
+}
