@@ -1,0 +1,70 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <set>
+#include <vector>
+#include <algorithm>
+#include <cctype>
+
+bool isMatchingWord(const std::string& word, const std::string& target) {
+    std::vector<int> targetCount(256, 0);
+    for (char c : target) targetCount[c]++;
+
+    std::vector<int> wordCount(256, 0);
+    for (char c : word) wordCount[c]++;
+
+    // Проверяем соответствие
+    int extraCount = 0;
+    for (char c = 'a'; c <= 'z'; c++) {
+        if (wordCount[c] > targetCount[c]) {
+            extraCount += (wordCount[c] - targetCount[c]);
+            if (extraCount > 1) return false;  // Больше одной лишней буквы
+        }
+        else if (wordCount[c] < targetCount[c]) {
+            return false;  // Отсутствие нужной буквы
+        }
+    }
+
+    return extraCount == 1;  // Должна быть ровно одна лишняя буква
+}
+
+int main() {
+    std::string targetWord = "suday";  // Здесь замените на ваше слово
+    std::ifstream inputFile("8_laba_ii_test.txt");
+    std::ofstream outputFile("output_8_laba_ii_test.txt");
+
+    if (!inputFile.is_open() || !outputFile.is_open()) {
+        std::cerr << "Ошибка при открытии файла!" << std::endl;
+        return 1;
+    }
+
+    std::set<std::string> foundWords;
+    std::string word;
+
+    // Читаем слова из входного файла
+    while (inputFile >> word) {
+        // Приводим к нижнему регистру для сравнения
+        std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+        if (isMatchingWord(word, targetWord)) {
+            foundWords.insert(word);  // Сохраняем только уникальные слова
+        }
+    }
+
+    // Записываем слова в вектор для сортировки
+    std::vector<std::string> sortedWords(foundWords.begin(), foundWords.end());
+
+    // Сортируем по длине слов в порядке невозрастания
+    std::sort(sortedWords.begin(), sortedWords.end(), [](const std::string& a, const std::string& b) {
+        return a.length() > b.length();
+        });
+
+    // Ограничиваем количество слов до 2000 и записываем в выходной файл
+    size_t count = std::min(sortedWords.size(), static_cast<size_t>(2000));
+    for (size_t i = 0; i < count; ++i) {
+        outputFile << sortedWords[i] << std::endl;
+    }
+
+    inputFile.close();
+    outputFile.close();
+    return 0;
+}
